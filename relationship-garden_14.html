@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My People Garden 🌿</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f5f0e8;
+  --card:      #fdfaf5;
+  --border:    #d6c9b0;
+  --text:      #2c2416;
+  --muted:     #7a7060;
+  --pink:      #5a8a6a;
+  --peach:     #c17f4a;
+  --yellow:    #d4a843;
+  --mint:      #4a9e7a;
+  --sky:       #4a7fa0;
+  --lavender:  #6a8fa8;
+  --coral:     #b85c3a;
+  --green:     #4a7a5a;
+  --shadow:    rgba(80,60,30,0.13);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, #b5a88833 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* HEADER */
+header {
+  position: relative;
+  z-index: 10;
+  background: linear-gradient(135deg, #3d6b52 0%, #5a7a4a 45%, #8a7a4a 100%);
+  padding: 1.1rem 1.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  box-shadow: 0 4px 24px rgba(40,70,50,0.28);
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.logo em { font-style: italic; }
+
+.hpills { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+.hpill {
+  background: rgba(255,255,255,0.28);
+  border-radius: 99px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: white;
+}
+
+/* NAV */
+.nav-tabs {
+  position: relative; z-index: 10;
+  display: flex; gap: 0;
+  padding: 0 1.5rem;
+  background: white;
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+}
+
+.nav-tab {
+  padding: 0.85rem 1.2rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--muted);
+  cursor: pointer;
+  border: none; border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  background: none;
+  font-family: 'Nunito', sans-serif;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.nav-tab:hover { color: #4a7a5a; }
+.nav-tab.active { color: var(--text); border-bottom-color: #4a7a5a; }
+
+/* MAIN */
+main { position: relative; z-index: 5; padding: 1.5rem 1.5rem 6rem; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* TODAY BANNER */
+.today-banner {
+  background: linear-gradient(135deg,#eef4ee,#f5f0e0);
+  border: 2px solid #b8cca8;
+  border-radius: 18px;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 1.4rem;
+  display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
+}
+.today-label { font-weight: 800; font-size: 0.76rem; color: #4a7a5a; white-space: nowrap; }
+.today-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.today-chip {
+  padding: 0.25rem 0.8rem; border-radius: 99px;
+  font-size: 0.68rem; font-weight: 800;
+  cursor: pointer; border: none; font-family: 'Nunito', sans-serif;
+  transition: transform 0.15s;
+}
+.today-chip:hover { transform: scale(1.06); }
+.chip-urgent { background:#f5e6dc; color:#8a3a1a; }
+.chip-warn   { background:#f0ead8; color:#7a5a1a; }
+.chip-ok     { background:#dff0e8; color:#1a5a38; }
+
+/* FILTER BAR */
+.filter-bar { display: flex; gap: 0.4rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.fp {
+  padding: 0.28rem 0.75rem; border-radius: 99px;
+  font-size: 0.67rem; font-weight: 800;
+  border: 2px solid var(--border); background: white;
+  cursor: pointer; color: var(--muted);
+  font-family: 'Nunito', sans-serif; transition: all 0.2s;
+}
+.fp:hover { border-color: #4a7a5a; color: #4a7a5a; }
+.fp.on { background: #4a7a5a; border-color: #4a7a5a; color: white; }
+.fp.overdue-fp { border-color: #c8a888; color: #7a4a1a; }
+.fp.overdue-fp.on { background: #8a5a2a; border-color: #8a5a2a; color: white; }
+
+/* SECTION */
+.section-head { display: flex; align-items: center; gap: 0.7rem; margin: 1.4rem 0 0.7rem; }
+.section-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.28rem 0.85rem; border-radius: 99px;
+  font-size: 0.7rem; font-weight: 800; color: white;
+}
+.section-freq { font-size: 0.65rem; color: var(--muted); font-weight: 700; }
+.section-line { flex:1; height:1.5px; background:var(--border); border-radius:1px; }
+
+/* CARDS */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.9rem;
+}
+
+.person-card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 1rem;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  box-shadow: 0 3px 14px var(--shadow);
+  transition: all 0.22s;
+  position: relative;
+  overflow: hidden;
+}
+.person-card:hover { transform: translateY(-3px); box-shadow: 0 9px 26px var(--shadow); }
+
+.card-ribbon { position:absolute; top:0; left:0; right:0; height:5px; border-radius:20px 20px 0 0; }
+
+.plant-wrap { height:62px; display:flex; align-items:flex-end; justify-content:center; margin:0.4rem 0 0.5rem; }
+
+.hbar-track { background:#e0d8c8; border-radius:99px; height:5px; margin-bottom:0.6rem; overflow:hidden; }
+.hbar-fill { height:100%; border-radius:99px; transition:width 0.6s cubic-bezier(.4,2,.6,1); }
+
+.pname { font-size:0.95rem; font-weight:800; margin-bottom:0.12rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pmeta { font-size:0.6rem; color:var(--muted); font-weight:700; margin-bottom:0.55rem; }
+.plast { display:flex; justify-content:space-between; align-items:center; font-size:0.61rem; color:var(--muted); font-weight:700; }
+
+.health-badge { padding:2px 8px; border-radius:99px; font-size:0.58rem; font-weight:800; }
+.badge-great  { background:#dff0e8; color:#1a5a38; }
+.badge-ok     { background:#f0ead8; color:#7a5a1a; }
+.badge-urgent { background:#f0e0d0; color:#7a3a1a; }
+
+.water-btn {
+  width:100%; margin-top:0.6rem;
+  padding:0.45rem; border-radius:11px;
+  font-family:'Nunito',sans-serif; font-size:0.66rem; font-weight:800;
+  cursor:pointer; border:none; transition:all 0.2s;
+}
+.wbtn-ok     { background:#dff0e8; color:#1a5a38; }
+.wbtn-ok:hover { background:#c8e8d8; }
+.wbtn-urgent { background:linear-gradient(135deg,#c17f4a,#8a4a2a); color:white; box-shadow:0 4px 12px rgba(130,70,30,0.3); }
+.wbtn-urgent:hover { transform:scale(1.02); }
+
+.urgency-ring {
+  position:absolute; top:9px; right:9px;
+  width:9px; height:9px; border-radius:50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.55);opacity:0.45} }
+
+.add-card {
+  background:var(--card); border:2.5px dashed #b8c8a8;
+  border-radius:20px; min-height:195px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:0.5rem; cursor:pointer; color:var(--muted);
+  font-size:0.7rem; font-weight:800; transition:all 0.2s;
+}
+.add-card:hover { border-color:#4a7a5a; color:#4a7a5a; background:#f0f5ee; }
+.add-icon { font-size:1.9rem; }
+
+/* CALENDAR */
+.cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+.cal-month { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--text); }
+.cal-nav { display:flex; gap:0.5rem; }
+.cal-nav-btn {
+  width:34px; height:34px; border-radius:50%;
+  border:2px solid var(--border); background:white;
+  cursor:pointer; font-size:0.85rem;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s; color:var(--text);
+}
+.cal-nav-btn:hover { border-color:#4a7a5a; color:#4a7a5a; }
+
+.cal-legend { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.8rem; }
+.cal-leg-item { display:flex; align-items:center; gap:0.35rem; font-size:0.62rem; font-weight:800; color:var(--muted); }
+.leg-dot { width:9px; height:9px; border-radius:50%; }
+
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.cal-day-label { text-align:center; font-size:0.62rem; font-weight:800; color:var(--muted); padding:0.35rem 0; text-transform:uppercase; letter-spacing:0.04em; }
+
+.cal-cell {
+  background:white; border-radius:11px; min-height:76px; padding:0.35rem;
+  border:2px solid transparent; position:relative; transition:border-color 0.2s;
+}
+.cal-cell:hover { border-color:#c8d8b8; }
+.cal-cell.today-cell { border-color:#4a7a5a !important; background:#f0f5ee; }
+.cal-cell.other-month { opacity:0.3; }
+.cal-date { font-size:0.68rem; font-weight:800; color:var(--text); margin-bottom:0.15rem; }
+.cal-cell.today-cell .cal-date { color:#4a7a5a; }
+
+.cal-event {
+  display:flex; align-items:center; gap:2px;
+  border-radius:5px; padding:1px 4px;
+  font-size:0.56rem; font-weight:800; margin-bottom:2px;
+  cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  transition:filter 0.15s;
+}
+.cal-event:hover { filter:brightness(0.92); }
+
+/* REMINDERS */
+.reminder-setup-box {
+  background:linear-gradient(135deg,#eef4ee,#f5f0e0);
+  border:2px dashed #b8cca8; border-radius:18px;
+  padding:1.2rem 1.4rem; margin-bottom:1.4rem;
+}
+.rsetup-title { font-weight:800; font-size:0.85rem; color:#4a7a5a; margin-bottom:0.4rem; }
+.rsetup-sub { font-size:0.68rem; color:var(--muted); line-height:1.55; margin-bottom:0.9rem; }
+
+.contact-inputs { display:flex; gap:0.8rem; flex-wrap:wrap; margin-bottom:0.8rem; }
+.ci-wrap { flex:1; min-width:170px; }
+.ci-wrap label { display:block; font-size:0.62rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.3rem; }
+.ci-wrap input {
+  width:100%; border:2px solid var(--border); border-radius:11px;
+  padding:0.5rem 0.8rem; font-family:'Nunito',sans-serif; font-size:0.77rem;
+  font-weight:700; color:var(--text); background:white; outline:none;
+  transition:border-color 0.2s;
+}
+.ci-wrap input:focus { border-color:#4a7a5a; }
+
+.rem-card {
+  background:white; border-radius:16px; border:2px solid var(--border);
+  padding:0.9rem 1.1rem; margin-bottom:0.7rem;
+  display:flex; align-items:center; gap:0.9rem;
+}
+.rem-emoji { font-size:1.55rem; }
+.rem-info { flex:1; }
+.rem-name { font-weight:800; font-size:0.88rem; }
+.rem-detail { font-size:0.65rem; color:var(--muted); font-weight:700; margin-top:0.15rem; }
+.rem-btns { display:flex; gap:0.4rem; }
+.rtoggle {
+  padding:0.28rem 0.7rem; border-radius:99px;
+  font-size:0.62rem; font-weight:800; border:2px solid;
+  cursor:pointer; transition:all 0.2s; font-family:'Nunito',sans-serif;
+}
+.rt-email { border-color:#4a7fa0; color:#4a7fa0; background:transparent; }
+.rt-email.on { background:#4a7fa0; color:white; }
+.rt-sms   { border-color:#4a9e7a; color:#4a9e7a; background:transparent; }
+.rt-sms.on { background:#4a9e7a; color:white; }
+
+.rem-summary {
+  background:#eef4ee; border-radius:16px;
+  padding:1rem 1.2rem; font-size:0.7rem;
+  line-height:2.1; color:var(--text); font-weight:600;
+}
+
+/* MODALS */
+.overlay {
+  position:fixed; inset:0;
+  background:rgba(30,25,15,0.6);
+  backdrop-filter:blur(5px);
+  z-index:200; display:none;
+  align-items:center; justify-content:center; padding:1rem;
+}
+.overlay.open { display:flex; }
+
+.modal {
+  background:white; border-radius:24px; padding:1.7rem;
+  width:100%; max-width:440px; max-height:88vh;
+  overflow-y:auto; position:relative;
+  box-shadow:0 20px 60px rgba(40,60,30,0.18);
+}
+
+.modal-ribbon { height:6px; border-radius:99px; margin-bottom:1.1rem; }
+.modal-title { font-family:'Playfair Display',serif; font-size:1.35rem; margin-bottom:0.2rem; }
+.modal-sub { font-size:0.68rem; color:var(--muted); font-weight:700; margin-bottom:1.2rem; }
+
+.close-btn {
+  position:absolute; top:1.1rem; right:1.1rem;
+  background:#eef4ee; border:none; border-radius:50%;
+  width:30px; height:30px; cursor:pointer; font-size:0.85rem;
+  color:var(--muted); transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.close-btn:hover { background:#d8e8d0; color:#4a7a5a; }
+
+.field { margin-bottom:0.9rem; }
+.field label {
+  display:block; font-size:0.62rem; font-weight:800;
+  color:var(--muted); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:0.35rem;
+}
+.field input, .field select, .field textarea {
+  width:100%; border:2px solid var(--border); border-radius:11px;
+  padding:0.55rem 0.85rem; font-family:'Nunito',sans-serif;
+  font-size:0.78rem; font-weight:700; color:var(--text);
+  background:white; outline:none; transition:border-color 0.2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color:#4a7a5a; }
+.field textarea { resize:vertical; min-height:65px; }
+.field select option { background:white; }
+
+.emoji-grid { display:flex; flex-direction:column; gap:0.5rem; max-height:220px; overflow-y:auto; padding-right:2px; }
+.ep-cat-label {
+  font-size:0.58rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:0.07em; color:var(--muted);
+  padding-top:0.3rem; border-top:1px solid var(--border);
+  margin-top:0.1rem;
+}
+.emoji-grid::-webkit-scrollbar { width:4px; }
+.emoji-grid::-webkit-scrollbar-track { background:#f0ece4; border-radius:4px; }
+.emoji-grid::-webkit-scrollbar-thumb { background:#b8cca8; border-radius:4px; }
+.ep-cat-label:first-child { border-top:none; margin-top:0; padding-top:0; }
+.ep-cat-row { display:flex; flex-wrap:wrap; gap:0.3rem; }
+.emoji-opt {
+  width:34px; height:34px; border-radius:8px;
+  border:2px solid transparent; background:#eef4ee;
+  font-size:1rem; cursor:pointer; transition:all 0.14s;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.emoji-opt:hover { border-color:#b8cca8; transform:scale(1.12); }
+.emoji-opt.sel   { border-color:#4a7a5a; background:#d8e8d0; }
+
+.btn-row { display:flex; gap:0.6rem; margin-top:1.2rem; }
+.btn {
+  flex:1; padding:0.6rem; border-radius:11px;
+  font-family:'Nunito',sans-serif; font-size:0.72rem; font-weight:800;
+  cursor:pointer; transition:all 0.2s; border:none;
+}
+.btn-pink  { background:linear-gradient(135deg,#4a7a5a,#6a9a5a); color:white; box-shadow:0 4px 14px rgba(60,100,60,0.25); }
+.btn-pink:hover  { transform:translateY(-1px); box-shadow:0 6px 18px rgba(60,100,60,0.35); }
+.btn-ghost { background:#eef4ee; color:var(--muted); }
+.btn-ghost:hover { background:#d8e8d0; color:var(--text); }
+.btn-red   { background:#f0e4d8; color:#7a3a1a; }
+.btn-red:hover   { background:#e0d0c0; }
+
+/* PROFILE */
+.prof-avatar { text-align:center; font-size:3.2rem; margin-bottom:0.3rem; }
+.prof-name   { font-family:'Playfair Display',serif; font-size:1.55rem; text-align:center; }
+.prof-cat    { text-align:center; font-size:0.68rem; font-weight:800; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:1rem; }
+
+.stat-row { display:flex; justify-content:space-between; padding:0.45rem 0; border-bottom:1.5px solid #ede8e0; font-size:0.7rem; }
+.stat-row:last-child { border:none; }
+.stat-k { color:var(--muted); font-weight:700; }
+.stat-v { font-weight:800; }
+
+/* LOG */
+.notes-section { margin-top:1.2rem; }
+.notes-title {
+  font-size:0.65rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:0.08em; color:var(--muted); margin-bottom:0.6rem;
+  display:flex; align-items:center; gap:0.4rem;
+}
+.log-count-badge {
+  background:#eef4ee; border-radius:99px;
+  padding:1px 8px; font-size:0.58rem;
+}
+
+.note-entry {
+  background:#f5f0e8; border-left:3px solid #4a7a5a;
+  border-radius:0 10px 10px 0; padding:0.55rem 0.75rem; margin-bottom:0.45rem;
+  font-size:0.7rem;
+}
+.note-date { font-size:0.58rem; color:var(--muted); font-weight:800; margin-bottom:0.15rem; }
+.note-how  { font-weight:800; color:#7a5a2a; font-size:0.66rem; margin-bottom:0.15rem; }
+.note-text { color:var(--text); line-height:1.5; }
+
+/* Sun */
+.fsun {
+  position: absolute;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffe89a 30%, #f5c84a 70%, transparent 100%);
+  top: 8%; right: 12%;
+  box-shadow: 0 0 32px 12px rgba(255,220,80,0.3);
+  animation: sunPulse 5s ease-in-out infinite;
+}
+@keyframes sunPulse {
+  0%,100% { box-shadow: 0 0 32px 12px rgba(255,220,80,0.3); }
+  50%      { box-shadow: 0 0 48px 20px rgba(255,220,80,0.45); }
+}
+
+/* Birds */
+.fbird {
+  position: absolute;
+  width: 18px; height: 6px;
+  border-top: 2px solid rgba(60,80,50,0.55);
+  border-radius: 50% 50% 0 0;
+}
+.fbird::after {
+  content: '';
+  position: absolute;
+  right: -9px; top: -2px;
+  width: 9px; height: 6px;
+  border-top: 2px solid rgba(60,80,50,0.55);
+  border-radius: 50% 50% 0 0;
+}
+.fbird-1 { top: 14%; left: 18%; animation: birdFly 18s linear infinite; }
+.fbird-2 { top: 10%; left: 30%; animation: birdFly 24s linear 3s infinite; opacity:0.7; transform:scale(0.75); }
+.fbird-3 { top: 18%; left: 8%;  animation: birdFly 30s linear 8s infinite; opacity:0.5; transform:scale(0.6); }
+@keyframes birdFly {
+  0%   { transform: translateX(0)      translateY(0); }
+  25%  { transform: translateX(60px)   translateY(-10px); }
+  50%  { transform: translateX(120px)  translateY(4px); }
+  75%  { transform: translateX(180px)  translateY(-6px); }
+  100% { transform: translateX(260px)  translateY(0); opacity: 0; }
+}
+
+/* Forest trees - allow horizontal scroll on small screens */
+.forest-trees {
+  position: absolute;
+  bottom: 0; left: 0; right: 0; top: -200px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 1%;
+  gap: 2px;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+.forest-scene { height: 460px; }
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(40,60,30,0.18);
+  margin-bottom: 1rem;
+}
+
+.forest-sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    #b8d4c0 0%,
+    #d4e8c8 40%,
+    #e8f0d8 70%,
+    #f0ead8 100%
+  );
+}
+
+/* Animated clouds */
+.forest-sky::before, .forest-sky::after {
+  content: '';
+  position: absolute;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.5);
+}
+.forest-sky::before {
+  width: 120px; height: 36px;
+  top: 12%; left: 10%;
+  box-shadow: 40px -8px 0 rgba(255,255,255,0.4), 80px 4px 0 rgba(255,255,255,0.3);
+  animation: cloudDrift 28s linear infinite;
+}
+.forest-sky::after {
+  width: 80px; height: 24px;
+  top: 22%; left: 55%;
+  box-shadow: 30px -4px 0 rgba(255,255,255,0.35);
+  animation: cloudDrift 38s linear infinite reverse;
+}
+@keyframes cloudDrift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(120px); }
+}
+
+/* Hills */
+.forest-hills { position: absolute; inset: 0; }
+.hill {
+  position: absolute;
+  bottom: 25%;
+  border-radius: 50% 50% 0 0;
+}
+.hill-back {
+  width: 110%; height: 200px;
+  left: -5%; bottom: 30%;
+  background: #7aaa7a;
+  opacity: 0.45;
+}
+.hill-mid {
+  width: 80%; height: 160px;
+  left: 15%; bottom: 26%;
+  background: #5a8a5a;
+  opacity: 0.5;
+}
+.hill-front {
+  width: 60%; height: 100px;
+  right: -5%; bottom: 24%;
+  background: #4a7a4a;
+  opacity: 0.4;
+}
+
+/* Ground */
+.forest-ground {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 35%;
+  background: linear-gradient(180deg, #6a9a5a 0%, #5a8a48 40%, #4a7840 100%);
+}
+
+.forest-ground::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: 0; right: 0; height: 18px;
+  background: radial-gradient(ellipse 30px 12px at 50% 100%, #8aba6a 0%, transparent 70%);
+  background-size: 48px 18px;
+  background-repeat: repeat-x;
+}
+
+/* Fog */
+.forest-fog {
+  position: absolute;
+  bottom: 28%; left: 0; right: 0; height: 60px;
+  background: linear-gradient(180deg, transparent 0%, rgba(240,245,230,0.35) 100%);
+  pointer-events: none;
+}
+
+/* Trees container */
+.forest-trees {
+  position: absolute;
+  bottom: 0; left: 0; right: 0; top: -180px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  padding: 0 2%;
+  flex-wrap: nowrap;
+  overflow: visible;
+}
+
+/* Individual tree wrapper */
+.ftree-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s;
+  position: relative;
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+.ftree-wrap:hover { transform: translateY(-8px) scale(1.06); z-index: 10; }
+.ftree-wrap:hover .ftree-label { opacity: 1; transform: translateY(0); }
+
+/* Tree label (name) */
+.ftree-label {
+  position: absolute;
+  bottom: calc(100% - 4px);
+  left: 50%; transform: translateX(-50%) translateY(6px);
+  background: rgba(44,36,22,0.85);
+  color: #f5f0e8;
+  border-radius: 8px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  transition: all 0.2s;
+  pointer-events: none;
+  z-index: 20;
+}
+.ftree-label::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%; transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: rgba(44,36,22,0.85);
+}
+
+/* Ground shadow under each tree */
+.ftree-shadow {
+  width: 100%;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.15);
+  margin-top: -2px;
+  flex-shrink: 0;
+}
+
+/* Forest legend below scene */
+.forest-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  justify-content: center;
+}
+.fleg-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--muted);
+  background: white;
+  border-radius: 99px;
+  padding: 0.2rem 0.65rem;
+  border: 1.5px solid var(--border);
+}
+.fleg-dot { width: 9px; height: 9px; border-radius: 50%; }
+.gender-ratio-wrap {
+  position: relative;
+  margin: 0 1.5rem;
+  cursor: default;
+}
+.gender-ratio-bar {
+  height: 3px;
+  background: #ddd8cc;
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+  opacity: 0.35;
+  transition: opacity 0.3s, height 0.25s;
+}
+.gender-ratio-wrap:hover .gender-ratio-bar { opacity: 1; height: 7px; }
+.gender-ratio-segments { display: flex; height: 100%; }
+.gr-seg { height: 100%; transition: all 0.4s; }
+.gender-ratio-tooltip {
+  position: absolute;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  background: #2c2416f0;
+  color: #f5f0e8;
+  border-radius: 10px;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 20;
+  display: flex;
+  gap: 0.7rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.gender-ratio-wrap:hover .gender-ratio-tooltip { opacity: 1; }
+.gr-tt-item { display: flex; align-items: center; gap: 0.3rem; }
+.gr-tt-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.bday-badge {
+  display:inline-flex; align-items:center; gap:0.35rem;
+  padding:0.22rem 0.7rem; border-radius:99px;
+  font-size:0.66rem; font-weight:800;
+  background:#fdf0e0; color:#8a5a1a; border:1.5px solid #e8c888;
+}
+.bday-soon {
+  background:#fff0d8; color:#b85a00; border-color:#f0b050;
+  animation: pulse 2s infinite;
+}
+
+/* ORG TAGS & INVOLVEMENTS */
+.memo-section { margin-top:1rem; }
+.memo-block { margin-bottom:0.9rem; }
+.memo-block-label {
+  font-size:0.6rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:0.09em; color:var(--muted); margin-bottom:0.4rem;
+  display:flex; align-items:center; gap:0.5rem;
+}
+.tag-row { display:flex; flex-wrap:wrap; gap:0.35rem; align-items:center; }
+.org-tag {
+  display:inline-flex; align-items:center; gap:0.3rem;
+  padding:0.22rem 0.65rem; border-radius:99px;
+  font-size:0.66rem; font-weight:800;
+  background:#e4eee8; color:#3a6a4a; border:1.5px solid #b8d4c0;
+}
+.involvement-tag {
+  display:inline-flex; align-items:center; gap:0.3rem;
+  padding:0.22rem 0.65rem; border-radius:99px;
+  font-size:0.66rem; font-weight:800;
+  background:#e8e8f0; color:#4a4a7a; border:1.5px solid #c0c0d8;
+}
+.tag-remove {
+  background:none; border:none; cursor:pointer;
+  font-size:0.65rem; color:inherit; opacity:0.55;
+  padding:0; line-height:1; margin-left:1px;
+  transition:opacity 0.15s;
+}
+.tag-remove:hover { opacity:1; }
+.tag-input-row { display:flex; gap:0.4rem; margin-top:0.4rem; }
+.tag-input {
+  flex:1; border:1.5px solid var(--border); border-radius:8px;
+  padding:0.38rem 0.7rem; font-family:'Nunito',sans-serif;
+  font-size:0.73rem; font-weight:700; color:var(--text);
+  background:white; outline:none; transition:border-color 0.2s;
+}
+.tag-input:focus { border-color:#4a7a5a; }
+.tag-add-btn {
+  padding:0.38rem 0.75rem; border-radius:8px; border:none;
+  background:#4a7a5a; color:white; font-family:'Nunito',sans-serif;
+  font-size:0.7rem; font-weight:800; cursor:pointer; transition:background 0.2s;
+  white-space:nowrap;
+}
+.tag-add-btn:hover { background:#3a6a4a; }
+.tag-add-btn.inv { background:#5a5a8a; }
+.tag-add-btn.inv:hover { background:#4a4a7a; }
+@keyframes treeSway {
+  from { transform: rotate(-1.5deg); transform-origin: bottom center; }
+  to   { transform: rotate(1.5deg);  transform-origin: bottom center; }
+}
+@keyframes toastIn  { from { opacity:0; transform:translateX(-50%) translateY(8px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes toastOut { from { opacity:1; } to { opacity:0; } }
+
+@keyframes float-up {
+  0%   { transform:translateY(0) scale(1); opacity:1; }
+  100% { transform:translateY(-65px) scale(1.6); opacity:0; }
+}
+.float-drop {
+  position:fixed; pointer-events:none;
+  font-size:1.5rem; z-index:999;
+  animation:float-up 0.85s ease-out forwards;
+}
+
+@media(max-width:600px){
+  header { flex-direction:column; align-items:flex-start; }
+  .cards-grid { grid-template-columns:repeat(auto-fill,minmax(148px,1fr)); }
+  .cal-cell { min-height:52px; }
+  .cal-event { display:none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">My <em>People</em> Garden 🌿</div>
+  <div class="hpills">
+    <div class="hpill">🌱 <span id="h-total">0</span> people</div>
+    <div class="hpill" style="background:rgba(180,90,50,0.3)">🍂 <span id="h-urgent">0</span> overdue</div>
+    <div class="hpill" style="background:rgba(60,120,80,0.3)">✨ <span id="h-healthy">0</span> thriving</div>
+  </div>
+</header>
+
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab('garden',this)">🌷 Garden</button>
+  <button class="nav-tab" onclick="switchTab('forest',this)">🌲 Forest</button>
+  <button class="nav-tab" onclick="switchTab('calendar',this)">📅 Calendar</button>
+  <button class="nav-tab" onclick="switchTab('reminders',this)">🔔 Reminders</button>
+</div>
+
+<!-- Hidden gender ratio bar — hover to reveal -->
+<div class="gender-ratio-wrap" id="gender-ratio-wrap">
+  <div class="gender-ratio-bar">
+    <div class="gender-ratio-segments" id="gender-segments"></div>
+  </div>
+  <div class="gender-ratio-tooltip" id="gender-tooltip"></div>
+</div>
+
+<main>
+
+<!-- GARDEN TAB -->
+<div class="tab-panel active" id="tab-garden">
+  <div class="today-banner" id="today-banner" style="display:none">
+    <div class="today-label">💧 Water today:</div>
+    <div class="today-chips" id="today-chips"></div>
+  </div>
+  <div class="filter-bar">
+    <button class="fp on" onclick="setFilter('all',this)">All</button>
+    <button class="fp" onclick="setFilter('close-friends',this)">💚 Close Friends</button>
+    <button class="fp" onclick="setFilter('family',this)">🏡 Family</button>
+    <button class="fp" onclick="setFilter('friends',this)">🌿 Friends</button>
+    <button class="fp" onclick="setFilter('mentors',this)">🌱 Mentors</button>
+    <button class="fp" onclick="setFilter('network',this)">🔗 Network</button>
+    <button class="fp overdue-fp" onclick="setFilter('overdue',this)">🍂 Overdue</button>
+  </div>
+  <div id="garden-root"></div>
+</div>
+
+<!-- FOREST TAB -->
+<div class="tab-panel" id="tab-forest">
+  <div class="forest-scene" id="forest-scene">
+    <div class="forest-sky">
+      <div class="fsun"></div>
+      <div class="fbird fbird-1"></div>
+      <div class="fbird fbird-2"></div>
+      <div class="fbird fbird-3"></div>
+    </div>
+    <div class="forest-hills">
+      <div class="hill hill-back"></div>
+      <div class="hill hill-mid"></div>
+      <div class="hill hill-front"></div>
+    </div>
+    <div class="forest-ground">
+      <div class="forest-trees" id="forest-trees"></div>
+    </div>
+    <div class="forest-fog"></div>
+  </div>
+  <div class="forest-legend" id="forest-legend"></div>
+</div>
+
+<!-- CALENDAR TAB -->
+<div class="tab-panel" id="tab-calendar">
+  <div class="cal-header">
+    <div class="cal-month" id="cal-month-label">Month</div>
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="changeMonth(-1)">◀</button>
+      <button class="cal-nav-btn" onclick="changeMonth(1)">▶</button>
+    </div>
+  </div>
+  <div class="cal-legend" id="cal-legend"></div>
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<!-- REMINDERS TAB -->
+<div class="tab-panel" id="tab-reminders">
+  <div class="reminder-setup-box">
+    <div class="rsetup-title">📬 Your contact info for reminders</div>
+    <div class="rsetup-sub">Enter your email and phone. Toggle reminders on/off per person below. Copy the summary to set up real alerts via calendar or a tool like IFTTT/Zapier.</div>
+    <div class="contact-inputs">
+      <div class="ci-wrap">
+        <label>📧 Your Email</label>
+        <input type="email" id="my-email" placeholder="you@email.com" oninput="saveContactInfo()">
+      </div>
+      <div class="ci-wrap">
+        <label>📱 Your Phone</label>
+        <input type="tel" id="my-phone" placeholder="+1 555 000 0000" oninput="saveContactInfo()">
+      </div>
+    </div>
+    <div style="font-size:0.63rem;color:var(--muted);background:#f5f0e0;border:1.5px solid #d4c090;border-radius:10px;padding:0.55rem 0.8rem;font-weight:700">
+      ⚠️ This app saves your preferences locally. Real push notifications need a server — use the summary below to set up calendar reminders or automation tools.
+    </div>
+  </div>
+  <div id="reminder-list"></div>
+  <div style="margin-top:1.4rem">
+    <div style="font-weight:800;font-size:0.8rem;margin-bottom:0.7rem">📋 Reminder Schedule Summary</div>
+    <div class="rem-summary" id="reminder-summary"></div>
+  </div>
+</div>
+
+</main>
+
+<!-- ADD PERSON MODAL -->
+<div class="overlay" id="add-modal">
+  <div class="modal">
+    <div class="modal-ribbon" style="background:linear-gradient(135deg,#4a7a5a,#d4a843)"></div>
+    <button class="close-btn" onclick="closeModal('add-modal')">✕</button>
+    <div class="modal-title">Plant a seed 🌱</div>
+    <div class="modal-sub">Add someone to your garden</div>
+    <div class="field"><label>Name</label><input type="text" id="f-name" placeholder="Who are they?"></div>
+    <div class="field"><label>Pick an avatar</label><div class="emoji-grid" id="ep-add"></div><input type="hidden" id="f-emoji" value="🌿"></div>
+    <div class="field"><label>Category</label>
+      <select id="f-cat">
+        <option value="close-friends">💚 Close Friends (2× / week)</option>
+        <option value="friends">🌿 Friends (3× / month)</option>
+        <option value="family">🏡 Family (1× / week)</option>
+        <option value="mentors">🌱 Mentors (1× / quarter)</option>
+        <option value="network">🔗 Network (2× / quarter)</option>
+      </select>
+    </div>
+    <div class="field"><label>How you connect</label><input type="text" id="f-how" placeholder="coffee, texts, calls, games…"></div>
+    <div class="field"><label>🎂 Birthday <span style="font-weight:600;text-transform:none;letter-spacing:0;font-size:0.62rem;color:var(--muted)">(year optional)</span></label><input type="date" id="f-bday"></div>
+    <div class="field"><label>Gender <span style="font-weight:600;text-transform:none;letter-spacing:0;font-size:0.62rem;color:var(--muted)">(optional, for your stats)</span></label>
+      <select id="f-gender">
+        <option value="">— prefer not to say / skip —</option>
+        <option value="woman">Woman</option>
+        <option value="man">Man</option>
+        <option value="nonbinary">Non-binary</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="field"><label>🏫 Groups / Orgs <span style="font-weight:600;text-transform:none;letter-spacing:0;font-size:0.62rem;color:var(--muted)">(e.g. UCSB, Law School, Work)</span></label><input type="text" id="f-orgs" placeholder="type and press Enter or comma…" onkeydown="handleTagInput(event,'f-orgs','f-orgs-preview','org')"><div class="tag-row" id="f-orgs-preview" style="margin-top:0.4rem"></div><input type="hidden" id="f-orgs-data" value="[]"></div>
+    <div class="field"><label>🎯 Involvements <span style="font-weight:600;text-transform:none;letter-spacing:0;font-size:0.62rem;color:var(--muted)">(clubs, causes, projects, roles)</span></label><input type="text" id="f-invs" placeholder="type and press Enter or comma…" onkeydown="handleTagInput(event,'f-invs','f-invs-preview','inv')"><div class="tag-row" id="f-invs-preview" style="margin-top:0.4rem"></div><input type="hidden" id="f-invs-data" value="[]"></div>
+    <div class="field"><label>Notes / vibe</label><textarea id="f-notes" placeholder="Inside jokes, topics you love, what makes them special…"></textarea></div>
+    <div class="field"><label>Last contacted (blank = today)</label><input type="date" id="f-last"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeModal('add-modal')">Cancel</button>
+      <button class="btn btn-pink" onclick="savePerson()">Plant them 🌱</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="overlay" id="profile-modal">
+  <div class="modal">
+    <div class="modal-ribbon" id="p-ribbon"></div>
+    <button class="close-btn" onclick="closeModal('profile-modal')">✕</button>
+    <div class="prof-avatar" id="p-avatar"></div>
+    <div class="prof-name"   id="p-name"></div>
+    <div class="prof-cat"    id="p-cat"></div>
+    <div id="p-stats"></div>
+    <div id="p-memo"></div>
+    <div class="notes-section">
+      <div class="notes-title">
+        📓 Connection Log
+        <span class="log-count-badge" id="log-count">0</span>
+      </div>
+      <div id="p-log"></div>
+      <div style="margin-top:0.8rem">
+        <div class="field"><label>How did you connect?</label><input type="text" id="log-how" placeholder="coffee, call, text, hangout…"></div>
+        <div class="field"><label>Note (optional)</label><textarea id="log-note" placeholder="What did you talk about?" style="min-height:52px"></textarea></div>
+        <div class="field"><label>Date (blank = today)</label><input type="date" id="log-date"></div>
+        <button class="btn btn-pink" style="width:100%" onclick="addLogEntry()">💧 Log connection</button>
+      </div>
+    </div>
+    <div class="btn-row" style="margin-top:1rem">
+      <button class="btn btn-ghost" onclick="openEditMode()">✏️ Edit</button>
+      <button class="btn btn-red"   onclick="deletePerson()">🗑 Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-ribbon" style="background:linear-gradient(135deg,#4a7fa0,#6a8a7a)"></div>
+    <button class="close-btn" onclick="closeModal('edit-modal')">✕</button>
+    <div class="modal-title">Edit ✏️</div>
+    <div class="modal-sub" id="edit-sub"></div>
+    <div class="field"><label>Name</label><input type="text" id="e-name"></div>
+    <div class="field"><label>Avatar</label><div class="emoji-grid" id="ep-edit"></div><input type="hidden" id="e-emoji"></div>
+    <div class="field"><label>Category</label>
+      <select id="e-cat">
+        <option value="close-friends">💚 Close Friends</option>
+        <option value="friends">🌿 Friends</option>
+        <option value="family">🏡 Family</option>
+        <option value="mentors">🌱 Mentors</option>
+        <option value="network">🔗 Network</option>
+      </select>
+    </div>
+    <div class="field"><label>How you connect</label><input type="text" id="e-how"></div>
+    <div class="field"><label>🎂 Birthday</label><input type="date" id="e-bday"></div>
+    <div class="field"><label>Gender</label>
+      <select id="e-gender">
+        <option value="">— prefer not to say / skip —</option>
+        <option value="woman">Woman</option>
+        <option value="man">Man</option>
+        <option value="nonbinary">Non-binary</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="field"><label>🏫 Groups / Orgs</label><input type="text" id="e-orgs" placeholder="type and press Enter or comma…" onkeydown="handleTagInput(event,'e-orgs','e-orgs-preview','org')"><div class="tag-row" id="e-orgs-preview" style="margin-top:0.4rem"></div><input type="hidden" id="e-orgs-data" value="[]"></div>
+    <div class="field"><label>🎯 Involvements</label><input type="text" id="e-invs" placeholder="type and press Enter or comma…" onkeydown="handleTagInput(event,'e-invs','e-invs-preview','inv')"><div class="tag-row" id="e-invs-preview" style="margin-top:0.4rem"></div><input type="hidden" id="e-invs-data" value="[]"></div>
+    <div class="field"><label>Notes / vibe</label><textarea id="e-notes"></textarea></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeModal('edit-modal')">Cancel</button>
+      <button class="btn btn-pink" onclick="saveEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Config ──────────────────────────────────────────
+const CATS = {
+  'close-friends': { label:'Close Friends',  emoji:'💚', color:'#4a7a5a', freq:3.5,  freqLabel:'2× / week' },
+  'friends':       { label:'Friends',        emoji:'🌿', color:'#6a9a5a', freq:10,   freqLabel:'3× / month' },
+  'family':        { label:'Family',         emoji:'🏡', color:'#4a7fa0', freq:7,    freqLabel:'1× / week' },
+  'mentors':       { label:'Mentors',        emoji:'🌱', color:'#7a6a3a', freq:90,   freqLabel:'1× / quarter' },
+  'network':       { label:'Network',        emoji:'🔗', color:'#6a8a7a', freq:45,   freqLabel:'2× / quarter' },
+};
+
+const EMOJI_CATEGORIES = [
+  { label: '☕ Coffee & Food', emojis: ['☕','🍵','🧋','🫖','🥐','🍩','🧇','🍰','🧁','🍫','🥧','🫙','🍶','🥤','🍺','🥂'] },
+  { label: '⚖️ Law & Justice', emojis: ['⚖️','🏛️','📜','🔨','🪙','🧑‍⚖️','📋','🗂️','🖋️','📌','🔏','🪪','🏅','🎓','📚','🗃️'] },
+  { label: '💼 Work & Career', emojis: ['💼','📊','📈','📉','🖥️','💻','🖨️','📱','🗝️','🏢','🤝','📣','📡','🔬','🧪','⚙️'] },
+  { label: '📓 Journal & Writing', emojis: ['📓','📔','📒','📕','📗','📘','📙','✏️','🖊️','🖋️','📝','🗒️','📰','📄','🗞️','💭'] },
+  { label: '🌿 Nature & Plants', emojis: ['🌿','🌱','🍀','🌺','🌸','🌻','🌼','🍄','🌵','🎋','🌲','🍃','🌾','🪷','🌹','🪴'] },
+  { label: '🐾 Animals', emojis: ['🦊','🐻','🐼','🦁','🐯','🦋','🦅','🐬','🐉','🦄','🦚','🐠','🦝','🐺','🦌','🐸'] },
+  { label: '🎨 Arts & Hobbies', emojis: ['🎨','🎭','🎸','🎹','🎺','🥁','🎤','🎬','📷','🎮','♟️','🧩','🎲','🎯','🪁','🖼️'] },
+  { label: '🏃 Sports & Fitness', emojis: ['🏃','🧘','🏋️','🚴','🧗','🏊','⚽','🏀','🎾','🏄','🤸','🧠','🥊','🏇','🎿','🪂'] },
+  { label: '✈️ Travel & Places', emojis: ['✈️','🌍','🏔️','🏖️','🗺️','🚂','⛵','🌅','🏕️','🗼','🏯','🌋','🌴','🏝️','🎠','🌃'] },
+  { label: '🔭 Science & Tech', emojis: ['🔭','🔬','🧬','⚗️','🤖','🛸','🧲','💡','🔋','📡','🛰️','⚛️','🧪','🔩','🪬','💊'] },
+  { label: '💚 People & Hearts', emojis: ['💚','🤍','🧡','💙','💛','🤎','💜','❤️','🫶','🫂','👋','🙌','✌️','🤞','🫡','🙏'] },
+  { label: '🌙 Mystical & Space', emojis: ['🌙','⭐','🌟','✨','☀️','🌈','🌊','❄️','🔥','🌪️','🪐','🌠','☄️','🌌','⚡','🌙'] },
+];
+const EMOJIS = EMOJI_CATEGORIES.flatMap(c => c.emojis);
+
+// ── State ────────────────────────────────────────────
+let people   = JSON.parse(localStorage.getItem('pg2-people')   || '[]');
+let settings = JSON.parse(localStorage.getItem('pg2-settings') || '{}');
+let activeFilter  = 'all';
+let activeProfile = null;
+let calYear, calMonth;
+const now = new Date();
+calYear = now.getFullYear(); calMonth = now.getMonth();
+
+function save()         { localStorage.setItem('pg2-people',   JSON.stringify(people));   }
+function saveSettings() { localStorage.setItem('pg2-settings', JSON.stringify(settings)); }
+
+// ── Helpers ──────────────────────────────────────────
+function today() { return new Date().toISOString().split('T')[0]; }
+
+function daysSince(d) {
+  if (!d) return 999;
+  return Math.max(0, Math.floor((new Date() - new Date(d + 'T00:00:00')) / 86400000));
+}
+
+function health(p) {
+  const freq = CATS[p.category]?.freq || 7;
+  return Math.max(0, Math.min(100, 100 - (daysSince(p.lastContact) / freq) * 100));
+}
+
+function statusOf(p) {
+  const h = health(p);
+  return h >= 65 ? 'great' : h >= 35 ? 'ok' : 'urgent';
+}
+
+function daysLabel(p) {
+  const d = daysSince(p.lastContact);
+  return d === 0 ? 'today' : d === 1 ? 'yesterday' : `${d}d ago`;
+}
+
+function nextDue(p) {
+  const d = new Date((p.lastContact || today()) + 'T00:00:00');
+  d.setDate(d.getDate() + Math.round(CATS[p.category]?.freq || 7));
+  return d;
+}
+
+function fmt(str) {
+  if (!str) return '';
+  return new Date(str + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+function bdayInfo(bday) {
+  if (!bday) return null;
+  const d = new Date(bday + 'T00:00:00');
+  const now = new Date();
+  const thisYear = now.getFullYear();
+  // Next birthday this year or next
+  let next = new Date(thisYear, d.getMonth(), d.getDate());
+  if (next < now) next = new Date(thisYear + 1, d.getMonth(), d.getDate());
+  const daysUntil = Math.round((next - now) / 86400000);
+  const monthDay = d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  // Show year only if not a placeholder (year > 1901)
+  const showYear = d.getFullYear() > 1901;
+  const label = showYear ? d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : monthDay;
+  return { daysUntil, label, monthDay, month: d.getMonth(), day: d.getDate() };
+}
+
+// ── Plants ───────────────────────────────────────────
+function plantSVG(h, color) {
+  const pct = h / 100;
+  const c   = color || '#ff7eb3';
+  const st  = '#7dc67a';
+
+  if (pct < 0.2) return `<svg viewBox="0 0 60 70" width="46" height="54">
+    <line x1="30" y1="65" x2="30" y2="48" stroke="${st}" stroke-width="3" stroke-linecap="round"/>
+    <path d="M30,52 Q22,44 18,46" stroke="${c}" stroke-width="2" fill="none" opacity="0.45" stroke-linecap="round"/>
+    <path d="M30,55 Q38,48 42,50" stroke="${c}" stroke-width="2" fill="none" opacity="0.45" stroke-linecap="round"/>
+    <ellipse cx="30" cy="66" rx="9" ry="3" fill="#e8d8c0" opacity="0.6"/>
+  </svg>`;
+
+  if (pct < 0.45) return `<svg viewBox="0 0 60 70" width="46" height="54">
+    <line x1="30" y1="65" x2="30" y2="34" stroke="${st}" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="20" cy="40" rx="11" ry="7" fill="${c}" opacity="0.75" transform="rotate(-30,20,40)"/>
+    <ellipse cx="40" cy="37" rx="11" ry="7" fill="${c}" opacity="0.75" transform="rotate(30,40,37)"/>
+    <ellipse cx="30" cy="66" rx="10" ry="3.5" fill="#d4c4a8" opacity="0.65"/>
+  </svg>`;
+
+  if (pct < 0.75) return `<svg viewBox="0 0 60 70" width="46" height="54">
+    <line x1="30" y1="65" x2="30" y2="22" stroke="${st}" stroke-width="3.5" stroke-linecap="round"/>
+    <ellipse cx="17" cy="35" rx="15" ry="9" fill="${c}" opacity="0.85" transform="rotate(-40,17,35)"/>
+    <ellipse cx="43" cy="32" rx="15" ry="9" fill="${c}" opacity="0.85" transform="rotate(40,43,32)"/>
+    <ellipse cx="18" cy="50" rx="10" ry="7" fill="${c}" opacity="0.6" transform="rotate(-25,18,50)"/>
+    <ellipse cx="42" cy="48" rx="10" ry="7" fill="${c}" opacity="0.6" transform="rotate(25,42,48)"/>
+    <ellipse cx="30" cy="66" rx="11" ry="4" fill="#d4c4a8" opacity="0.75"/>
+  </svg>`;
+
+  return `<svg viewBox="0 0 60 70" width="46" height="54">
+    <line x1="30" y1="65" x2="30" y2="20" stroke="${st}" stroke-width="3.5" stroke-linecap="round"/>
+    <ellipse cx="15" cy="34" rx="16" ry="9" fill="${c}" opacity="0.9" transform="rotate(-45,15,34)"/>
+    <ellipse cx="45" cy="30" rx="16" ry="9" fill="${c}" opacity="0.9" transform="rotate(45,45,30)"/>
+    <ellipse cx="16" cy="50" rx="11" ry="7" fill="${c}" opacity="0.7" transform="rotate(-25,16,50)"/>
+    <ellipse cx="44" cy="48" rx="11" ry="7" fill="${c}" opacity="0.7" transform="rotate(25,44,48)"/>
+    <circle cx="30" cy="14" r="4" fill="${c}cc"/>
+    <circle cx="38" cy="16" r="3.5" fill="${c}cc"/>
+    <circle cx="22" cy="16" r="3.5" fill="${c}cc"/>
+    <circle cx="36" cy="8"  r="3.5" fill="${c}cc"/>
+    <circle cx="24" cy="8"  r="3.5" fill="${c}cc"/>
+    <circle cx="30" cy="12" r="5" fill="${c}"/>
+    <circle cx="30" cy="12" r="2.5" fill="#fff8d0"/>
+    <ellipse cx="30" cy="66" rx="12" ry="4" fill="#d4c4a8" opacity="0.8"/>
+  </svg>`;
+}
+
+// ── Garden ───────────────────────────────────────────
+function renderGarden() {
+  const root = document.getElementById('garden-root');
+  let filtered = people.slice();
+  if      (activeFilter === 'overdue') filtered = filtered.filter(p => health(p) < 35);
+  else if (activeFilter !== 'all')     filtered = filtered.filter(p => p.category === activeFilter);
+
+  // Today banner
+  const due = people.filter(p => health(p) < 65).sort((a,b) => health(a)-health(b));
+  const banner = document.getElementById('today-banner');
+  if (due.length) {
+    banner.style.display = 'flex';
+    document.getElementById('today-chips').innerHTML = due.slice(0,9).map(p => {
+      const s = statusOf(p);
+      return `<button class="today-chip chip-${s}" onclick="openProfile('${p.id}')">${p.emoji} ${p.name}</button>`;
+    }).join('');
+  } else {
+    banner.style.display = 'none';
+  }
+
+  if (activeFilter === 'all') {
+    let html = '';
+    for (const [key, cat] of Object.entries(CATS)) {
+      const group = filtered.filter(p => p.category === key).sort((a,b)=>a.name.localeCompare(b.name));
+      html += `<div class="section-head">
+        <span class="section-badge" style="background:${cat.color}">${cat.emoji} ${cat.label}</span>
+        <span class="section-freq">${cat.freqLabel}</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="cards-grid">
+        ${group.map(cardHTML).join('')}
+        <div class="add-card" onclick="openAdd('${key}')"><div class="add-icon">＋</div><span>Add person</span></div>
+      </div>`;
+    }
+    root.innerHTML = html;
+  } else {
+    const cat = activeFilter === 'overdue' ? null : activeFilter;
+    root.innerHTML = `<div class="cards-grid">
+      ${filtered.sort((a,b)=>a.name.localeCompare(b.name)).map(cardHTML).join('')}
+      ${cat ? `<div class="add-card" onclick="openAdd('${cat}')"><div class="add-icon">＋</div><span>Add person</span></div>` : ''}
+    </div>`;
+  }
+  updateHeader();
+}
+
+function cardHTML(p) {
+  const h    = health(p);
+  const s    = statusOf(p);
+  const cat  = CATS[p.category];
+  const hc   = s==='great'?'#4a7a5a':s==='ok'?'#8a7a3a':'#b85c3a';
+  const bCls = s==='great'?'badge-great':s==='ok'?'badge-ok':'badge-urgent';
+  const wCls = s==='urgent'?'wbtn-urgent':'wbtn-ok';
+  const wLbl = s==='urgent'?'💧 Water now!':'💧 Log connection';
+  const dot  = s==='urgent'?`<div class="urgency-ring" style="background:#b85c3a"></div>`:'';
+
+  return `<div class="person-card" onclick="openProfile('${p.id}')" style="border-color:${s==='great'?cat.color+'44':'transparent'}">
+    <div class="card-ribbon" style="background:${cat.color}"></div>
+    ${dot}
+    <div class="plant-wrap">${plantSVG(h, cat.color)}</div>
+    <div class="hbar-track"><div class="hbar-fill" style="width:${h}%;background:${hc}"></div></div>
+    <div class="pname">${p.emoji} ${p.name}</div>
+    <div class="pmeta">${cat.label}</div>
+    <div class="plast">
+      <span>${daysLabel(p)}</span>
+      <span class="health-badge ${bCls}">${Math.round(h)}%</span>
+    </div>
+    <button class="water-btn ${wCls}" onclick="event.stopPropagation();quickWater('${p.id}',event)">${wLbl}</button>
+  </div>`;
+}
+
+function updateHeader() {
+  document.getElementById('h-total').textContent   = people.length;
+  document.getElementById('h-urgent').textContent  = people.filter(p=>health(p)<35).length;
+  document.getElementById('h-healthy').textContent = people.filter(p=>health(p)>=65).length;
+  renderGenderBar();
+}
+
+// ── Water ────────────────────────────────────────────
+function quickWater(id, e) {
+  const p = people.find(x=>x.id===id);
+  if (!p) return;
+  if (!p.log) p.log = [];
+  p.log.unshift({ id:Date.now().toString(), date:today(), how:'logged ✓', note:'' });
+  p.lastContact = today();
+  save();
+  if (e) {
+    const drop = document.createElement('div');
+    drop.className = 'float-drop';
+    drop.textContent = '💧';
+    drop.style.left = (e.clientX-12)+'px';
+    drop.style.top  = (e.clientY-12)+'px';
+    document.body.appendChild(drop);
+    setTimeout(()=>drop.remove(), 900);
+  }
+  renderGarden();
+}
+
+// ── Profile ───────────────────────────────────────────
+function openProfile(id) {
+  activeProfile = id;
+  const p = people.find(x=>x.id===id);
+  if (!p) return;
+  renderProfile(p);
+  openModal('profile-modal');
+}
+
+function renderProfile(p) {
+  const cat = CATS[p.category];
+  const h   = health(p);
+  const s   = statusOf(p);
+  const hc  = s==='great'?'#4a7a5a':s==='ok'?'#8a7a3a':'#b85c3a';
+
+  document.getElementById('p-ribbon').style.background = `linear-gradient(135deg,${cat.color},${cat.color}99)`;
+  document.getElementById('p-avatar').textContent = p.emoji;
+  document.getElementById('p-name').textContent   = p.name;
+  document.getElementById('p-cat').textContent    = `${cat.emoji} ${cat.label} · ${cat.freqLabel}`;
+
+  document.getElementById('p-stats').innerHTML = `
+    <div class="hbar-track" style="margin-bottom:1rem"><div class="hbar-fill" style="width:${h}%;background:${hc}"></div></div>
+    <div class="stat-row"><span class="stat-k">Last connected</span><span class="stat-v">${daysLabel(p)}</span></div>
+    <div class="stat-row"><span class="stat-k">Health</span><span class="stat-v" style="color:${hc}">${Math.round(h)}%</span></div>
+    <div class="stat-row"><span class="stat-k">Next due</span><span class="stat-v">${fmt(nextDue(p).toISOString().split('T')[0])}</span></div>
+    ${p.how   ? `<div class="stat-row"><span class="stat-k">Usually via</span><span class="stat-v">${p.how}</span></div>` : ''}
+    ${(() => {
+      const b = bdayInfo(p.birthday);
+      if (!b) return '';
+      const soon = b.daysUntil <= 14;
+      const txt = b.daysUntil === 0 ? '🎉 Today!!' : b.daysUntil <= 7 ? `in ${b.daysUntil}d 🎂` : b.daysUntil <= 14 ? `in ${b.daysUntil}d` : b.label;
+      return `<div class="stat-row"><span class="stat-k">🎂 Birthday</span><span class="stat-v" style="${soon?'color:#b85a00;font-weight:900':''}">${txt}</span></div>`;
+    })()}
+    ${p.notes ? `<div class="stat-row"><span class="stat-k">Notes</span><span class="stat-v" style="max-width:230px;text-align:right;font-style:italic;color:var(--muted);font-size:0.68rem">${p.notes}</span></div>` : ''}
+  `;
+
+  // Memo: orgs + involvements
+  const orgs = p.orgs || [];
+  const invs = p.involvements || [];
+  const memoEl = document.getElementById('p-memo');
+  if (orgs.length || invs.length) {
+    memoEl.innerHTML = `<div class="memo-section">
+      ${orgs.length ? `<div class="memo-block">
+        <div class="memo-block-label">🏫 Groups & Orgs</div>
+        <div class="tag-row">${orgs.map(o=>`<span class="org-tag">${o}</span>`).join('')}</div>
+      </div>` : ''}
+      ${invs.length ? `<div class="memo-block">
+        <div class="memo-block-label">🎯 Involvements</div>
+        <div class="tag-row">${invs.map(i=>`<span class="involvement-tag">${i}</span>`).join('')}</div>
+      </div>` : ''}
+    </div>`;
+  } else {
+    memoEl.innerHTML = '';
+  }
+
+  const log = p.log || [];
+  document.getElementById('log-count').textContent = log.length;
+  document.getElementById('p-log').innerHTML = log.length === 0
+    ? `<div style="font-size:0.68rem;color:var(--muted);padding:0.4rem 0">No entries yet — log your first connection!</div>`
+    : log.slice(0,8).map(e=>`
+        <div class="note-entry">
+          <div class="note-date">${fmt(e.date)}</div>
+          <div class="note-how">${e.how}</div>
+          ${e.note ? `<div class="note-text">${e.note}</div>` : ''}
+        </div>`).join('');
+}
+
+function addLogEntry() {
+  const p = people.find(x=>x.id===activeProfile);
+  if (!p) return;
+  const how  = document.getElementById('log-how').value.trim();
+  const note = document.getElementById('log-note').value.trim();
+  const date = document.getElementById('log-date').value || today();
+  if (!how) { document.getElementById('log-how').focus(); return; }
+  if (!p.log) p.log = [];
+  p.log.unshift({ id:Date.now().toString(), date, how, note });
+  p.lastContact = date;
+  save();
+  document.getElementById('log-how').value  = '';
+  document.getElementById('log-note').value = '';
+  document.getElementById('log-date').value = '';
+  renderProfile(p);
+  renderGarden();
+}
+
+// ── Add Person ────────────────────────────────────────
+let addCat = 'friends';
+function openAdd(cat) {
+  addCat = cat || 'friends';
+  document.getElementById('f-cat').value = addCat;
+  ['f-name','f-how','f-notes','f-last','f-orgs','f-invs','f-bday'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-gender').value = '';
+  document.getElementById('f-orgs-data').value = '[]';
+  document.getElementById('f-invs-data').value = '[]';
+  document.getElementById('f-orgs-preview').innerHTML = '';
+  document.getElementById('f-invs-preview').innerHTML = '';
+  buildEP('ep-add','f-emoji', EMOJIS[0]);
+  openModal('add-modal');
+}
+
+function savePerson() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { document.getElementById('f-name').focus(); return; }
+
+  // flush any typed-but-not-entered tag text
+  ['f-orgs','f-invs'].forEach(inputId => {
+    const val = document.getElementById(inputId).value.replace(/,/g,'').trim();
+    if (val) {
+      const dataId = inputId + '-data';
+      const existing = JSON.parse(document.getElementById(dataId).value || '[]');
+      if (!existing.includes(val)) existing.push(val);
+      document.getElementById(dataId).value = JSON.stringify(existing);
+    }
+  });
+
+  const p = {
+    id:          Date.now().toString(),
+    name,
+    emoji:       document.getElementById('f-emoji').value || '🌿',
+    category:    document.getElementById('f-cat').value,
+    how:         document.getElementById('f-how').value.trim(),
+    birthday:    document.getElementById('f-bday').value || '',
+    gender:      document.getElementById('f-gender').value || '',
+    orgs:        JSON.parse(document.getElementById('f-orgs-data').value || '[]'),
+    involvements:JSON.parse(document.getElementById('f-invs-data').value || '[]'),
+    notes:       document.getElementById('f-notes').value.trim(),
+    lastContact: document.getElementById('f-last').value || today(),
+    added:       today(),
+    log:         [],
+    remEmail:    false,
+    remSMS:      false,
+  };
+  people.push(p);
+  save();
+  closeModal('add-modal');
+  renderGarden();
+  renderReminders();
+}
+
+// ── Edit ──────────────────────────────────────────────
+function openEditMode() {
+  const p = people.find(x=>x.id===activeProfile);
+  if (!p) return;
+  document.getElementById('edit-sub').textContent  = p.name;
+  document.getElementById('e-name').value  = p.name;
+  document.getElementById('e-cat').value   = p.category;
+  document.getElementById('e-how').value   = p.how   || '';
+  document.getElementById('e-bday').value  = p.birthday || '';
+  document.getElementById('e-gender').value = p.gender  || '';
+  document.getElementById('e-notes').value = p.notes || '';
+  // orgs
+  const eOrgsData = p.orgs || [];
+  document.getElementById('e-orgs-data').value = JSON.stringify(eOrgsData);
+  document.getElementById('e-orgs').value = '';
+  renderTagPreview('e-orgs-preview', eOrgsData, 'e-orgs-data', 'org');
+  // involvements
+  const eInvsData = p.involvements || [];
+  document.getElementById('e-invs-data').value = JSON.stringify(eInvsData);
+  document.getElementById('e-invs').value = '';
+  renderTagPreview('e-invs-preview', eInvsData, 'e-invs-data', 'inv');
+  buildEP('ep-edit','e-emoji', p.emoji);
+  openModal('edit-modal');
+}
+
+function saveEdit() {
+  const p = people.find(x=>x.id===activeProfile);
+  if (!p) return;
+
+  // flush any typed-but-not-entered tag text before saving
+  ['e-orgs','e-invs'].forEach(inputId => {
+    const val = document.getElementById(inputId).value.replace(/,/g,'').trim();
+    if (val) {
+      const dataId = inputId + '-data';
+      const existing = JSON.parse(document.getElementById(dataId).value || '[]');
+      if (!existing.includes(val)) existing.push(val);
+      document.getElementById(dataId).value = JSON.stringify(existing);
+      document.getElementById(inputId).value = '';
+    }
+  });
+
+  p.name         = document.getElementById('e-name').value.trim()  || p.name;
+  p.emoji        = document.getElementById('e-emoji').value;
+  p.category     = document.getElementById('e-cat').value;
+  p.how          = document.getElementById('e-how').value.trim();
+  p.birthday     = document.getElementById('e-bday').value || '';
+  p.gender       = document.getElementById('e-gender').value || '';
+  p.orgs         = JSON.parse(document.getElementById('e-orgs-data').value || '[]');
+  p.involvements = JSON.parse(document.getElementById('e-invs-data').value || '[]');
+  p.notes        = document.getElementById('e-notes').value.trim();
+  save();
+  showToast('Changes saved ✓');
+  closeModal('edit-modal');
+  renderProfile(p);   // refresh the still-open profile modal
+  openModal('profile-modal'); // ensure it's visible
+  renderGarden();
+  renderReminders();
+}
+
+function deletePerson() {
+  if (!confirm('Remove from garden?')) return;
+  people = people.filter(p=>p.id!==activeProfile);
+  save();
+  closeModal('profile-modal');
+  renderGarden();
+  renderReminders();
+}
+
+// ── Tag Input (orgs & involvements) ──────────────────
+function handleTagInput(event, inputId, previewId, type) {
+  if (event.key === 'Enter' || event.key === ',') {
+    event.preventDefault();
+    event.stopPropagation();
+    const input = document.getElementById(inputId);
+    const dataId = inputId + '-data';
+    const val = input.value.replace(/,/g,'').trim();
+    if (!val) return;
+    const existing = JSON.parse(document.getElementById(dataId).value || '[]');
+    if (!existing.includes(val)) {
+      existing.push(val);
+      document.getElementById(dataId).value = JSON.stringify(existing);
+      renderTagPreview(previewId, existing, dataId, type);
+    }
+    input.value = '';
+  }
+}
+
+function renderTagPreview(previewId, tags, dataId, type) {
+  const cls = type === 'org' ? 'org-tag' : 'involvement-tag';
+  document.getElementById(previewId).innerHTML = tags.map((t,i) =>
+    `<span class="${cls}">${t}<button type="button" class="tag-remove" onclick="removeTag(${i},'${dataId}','${previewId}','${type}')">✕</button></span>`
+  ).join('');
+}
+
+function removeTag(idx, dataId, previewId, type) {
+  const tags = JSON.parse(document.getElementById(dataId).value || '[]');
+  tags.splice(idx, 1);
+  document.getElementById(dataId).value = JSON.stringify(tags);
+  renderTagPreview(previewId, tags, dataId, type);
+}
+
+// ── Emoji Picker ──────────────────────────────────────
+function buildEP(gridId, hiddenId, current) {
+  const cur = current || EMOJIS[0];
+  document.getElementById(hiddenId).value = cur;
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = EMOJI_CATEGORIES.map(cat => `
+    <div class="ep-cat-label">${cat.label}</div>
+    <div class="ep-cat-row">
+      ${cat.emojis.map(e =>
+        `<button type="button" class="emoji-opt ${e===cur?'sel':''}" onclick="selEmoji('${e}','${gridId}','${hiddenId}')">${e}</button>`
+      ).join('')}
+    </div>
+  `).join('');
+}
+
+function selEmoji(e, gid, hid) {
+  document.getElementById(hid).value = e;
+  document.querySelectorAll(`#${gid} .emoji-opt`).forEach(b=>b.classList.remove('sel'));
+  event.target.classList.add('sel');
+}
+
+// ── Filter ────────────────────────────────────────────
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.fp').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderGarden();
+}
+
+// ── Calendar ──────────────────────────────────────────
+function renderCalendar() {
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = `${MONTHS[calMonth]} ${calYear}`;
+
+  document.getElementById('cal-legend').innerHTML = Object.entries(CATS).map(([,c])=>
+    `<div class="cal-leg-item"><div class="leg-dot" style="background:${c.color}"></div>${c.label}</div>`
+  ).join('') + `<div class="cal-leg-item"><div class="leg-dot" style="background:#e8a030"></div>🎂 Birthday</div>`;
+
+  const grid = document.getElementById('cal-grid');
+  const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = DAYS.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
+
+  const firstDay      = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth   = new Date(calYear, calMonth+1, 0).getDate();
+  const prevMonthDays = new Date(calYear, calMonth, 0).getDate();
+  const todayStr      = today();
+
+  // Build due map
+  const dueMap = {}, logMap = {}, bdayMap = {};
+  people.forEach(p => {
+    // Next due dates (up to 3 cycles)
+    const freq = Math.round(CATS[p.category]?.freq || 7);
+    for (let i=0; i<3; i++) {
+      const nd = new Date((p.lastContact||today())+'T00:00:00');
+      nd.setDate(nd.getDate() + freq*(i+1));
+      if (nd.getFullYear()===calYear && nd.getMonth()===calMonth) {
+        const k = nd.getDate();
+        if (!dueMap[k]) dueMap[k]=[];
+        dueMap[k].push(p);
+      }
+    }
+    // Log entries
+    (p.log||[]).forEach(entry => {
+      if (!entry.date) return;
+      const ed = new Date(entry.date+'T00:00:00');
+      if (ed.getFullYear()===calYear && ed.getMonth()===calMonth) {
+        const k = ed.getDate();
+        if (!logMap[k]) logMap[k]=[];
+        logMap[k].push(p);
+      }
+    });
+    // Birthday (match month+day only)
+    if (p.birthday) {
+      const bd = new Date(p.birthday + 'T00:00:00');
+      if (bd.getMonth() === calMonth) {
+        const k = bd.getDate();
+        if (!bdayMap[k]) bdayMap[k] = [];
+        bdayMap[k].push(p);
+      }
+    }
+  });
+
+  // Prev month filler
+  for (let i=firstDay-1; i>=0; i--)
+    html += `<div class="cal-cell other-month"><div class="cal-date">${prevMonthDays-i}</div></div>`;
+
+  for (let d=1; d<=daysInMonth; d++) {
+    const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isTd = ds===todayStr;
+    const duePpl  = (dueMap[d]||[]).slice(0,2);
+    const logPpl  = (logMap[d]||[]).slice(0,1);
+    const bdayPpl = (bdayMap[d]||[]);
+
+    html += `<div class="cal-cell${isTd?' today-cell':''}">
+      <div class="cal-date">${d}</div>
+      ${bdayPpl.map(p=>`<div class="cal-event" style="background:#fdf0d8;color:#b85a00;font-weight:800;" onclick="openProfile('${p.id}')">🎂 ${p.name.split(' ')[0]}</div>`).join('')}
+      ${duePpl.map(p=>`<div class="cal-event" style="background:${CATS[p.category].color}28;color:${CATS[p.category].color}" onclick="openProfile('${p.id}')">${p.emoji} ${p.name.split(' ')[0]}</div>`).join('')}
+      ${logPpl.map(p=>`<div class="cal-event" style="background:#e0f0e8;color:#2a7a4a">✓ ${p.name.split(' ')[0]}</div>`).join('')}
+    </div>`;
+  }
+
+  const total = firstDay + daysInMonth;
+  const rem   = total%7===0?0:7-(total%7);
+  for (let d=1; d<=rem; d++)
+    html += `<div class="cal-cell other-month"><div class="cal-date">${d}</div></div>`;
+
+  grid.innerHTML = html;
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth>11) { calMonth=0; calYear++; }
+  if (calMonth<0)  { calMonth=11; calYear--; }
+  renderCalendar();
+}
+
+// ── Reminders ─────────────────────────────────────────
+function saveContactInfo() {
+  settings.email = document.getElementById('my-email').value;
+  settings.phone = document.getElementById('my-phone').value;
+  saveSettings();
+  renderReminderSummary();
+}
+
+function toggleReminder(id, type) {
+  const p = people.find(x=>x.id===id);
+  if (!p) return;
+  p['rem'+type] = !p['rem'+type];
+  save();
+  renderReminders();
+}
+
+function renderReminders() {
+  if (settings.email) document.getElementById('my-email').value = settings.email;
+  if (settings.phone) document.getElementById('my-phone').value = settings.phone;
+
+  const list = document.getElementById('reminder-list');
+  if (!people.length) {
+    list.innerHTML = `<div style="font-size:0.76rem;color:var(--muted);padding:0.8rem">Add people to your garden first!</div>`;
+    renderReminderSummary(); return;
+  }
+
+  // Upcoming birthdays block
+  const upcoming = people
+    .filter(p => p.birthday)
+    .map(p => ({ p, b: bdayInfo(p.birthday) }))
+    .filter(x => x.b && x.b.daysUntil <= 30)
+    .sort((a,b) => a.b.daysUntil - b.b.daysUntil);
+
+  const bdayBlock = upcoming.length ? `
+    <div style="background:#fdf4e0;border:1.5px solid #e8c870;border-radius:14px;padding:0.9rem 1.1rem;margin-bottom:1rem">
+      <div style="font-size:0.68rem;font-weight:800;color:#8a5a00;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem">🎂 Upcoming Birthdays (next 30 days)</div>
+      ${upcoming.map(({p,b}) => `
+        <div style="display:flex;align-items:center;gap:0.7rem;padding:0.4rem 0;border-bottom:1px solid #f0d880;font-size:0.72rem;" onclick="openProfile('${p.id}')" class="cursor-pointer">
+          <span style="font-size:1.3rem">${p.emoji}</span>
+          <span style="font-weight:800;flex:1">${p.name}</span>
+          <span style="font-weight:800;color:${b.daysUntil===0?'#d94000':b.daysUntil<=7?'#b85a00':'#7a6a00'}">
+            ${b.daysUntil===0?'🎉 Today!':b.daysUntil===1?'Tomorrow!':b.label+' ('+b.daysUntil+'d)'}
+          </span>
+        </div>`).join('')}
+    </div>` : '';
+
+  const sorted = [...people].sort((a,b)=>health(a)-health(b));
+  list.innerHTML = bdayBlock + sorted.map(p => {
+    const cat = CATS[p.category];
+    const b   = bdayInfo(p.birthday);
+    const bdayLine = b ? `<span style="margin-left:0.5rem;font-size:0.62rem;color:#8a6a00">🎂 ${b.label}</span>` : '';
+    return `<div class="rem-card">
+      <div class="rem-emoji">${p.emoji}</div>
+      <div class="rem-info">
+        <div class="rem-name">${p.name} ${bdayLine}</div>
+        <div class="rem-detail">${cat.emoji} ${cat.label} · Next: ${fmt(nextDue(p).toISOString().split('T')[0])}</div>
+      </div>
+      <div class="rem-btns">
+        <button class="rtoggle rt-email ${p.remEmail?'on':''}" onclick="toggleReminder('${p.id}','Email')" title="Email">📧</button>
+        <button class="rtoggle rt-sms   ${p.remSMS  ?'on':''}" onclick="toggleReminder('${p.id}','SMS')"   title="SMS">💬</button>
+      </div>
+    </div>`;
+  }).join('');
+  renderReminderSummary();
+}
+
+function renderReminderSummary() {
+  const emailPpl = people.filter(p=>p.remEmail);
+  const smsPpl   = people.filter(p=>p.remSMS);
+  const email = settings.email || '(no email set)';
+  const phone = settings.phone || '(no phone set)';
+  const bdayPpl = people.filter(p=>p.birthday);
+  let html = '';
+  if (!emailPpl.length && !smsPpl.length) {
+    html = `<span style="color:var(--muted)">Toggle on reminders per person above to generate your schedule here 🌿</span>`;
+  } else {
+    if (emailPpl.length) {
+      html += `<strong>📧 Email → ${email}</strong><br>`;
+      html += emailPpl.map(p => {
+        const b = bdayInfo(p.birthday);
+        const bStr = b ? ` · 🎂 ${b.label}` : '';
+        return `&nbsp;&nbsp;• ${p.emoji} ${p.name} — ${CATS[p.category].freqLabel} (next: ${fmt(nextDue(p).toISOString().split('T')[0])})${bStr}`;
+      }).join('<br>');
+      html += '<br><br>';
+    }
+    if (smsPpl.length) {
+      html += `<strong>💬 SMS → ${phone}</strong><br>`;
+      html += smsPpl.map(p => {
+        const b = bdayInfo(p.birthday);
+        const bStr = b ? ` · 🎂 ${b.label}` : '';
+        return `&nbsp;&nbsp;• ${p.emoji} ${p.name} — ${CATS[p.category].freqLabel} (next: ${fmt(nextDue(p).toISOString().split('T')[0])})${bStr}`;
+      }).join('<br>');
+    }
+  }
+  document.getElementById('reminder-summary').innerHTML = html;
+}
+
+// ── Gender Ratio Bar ─────────────────────────────────
+const GENDER_COLORS = {
+  woman:     '#6a9a8a',
+  man:       '#5a7a9a',
+  nonbinary: '#8a7a5a',
+  other:     '#7a8a6a',
+};
+const GENDER_LABELS = {
+  woman:'Women', man:'Men', nonbinary:'Non-binary', other:'Other'
+};
+
+function renderGenderBar() {
+  const counts = {};
+  let total = 0;
+  people.forEach(p => {
+    if (p.gender) {
+      counts[p.gender] = (counts[p.gender] || 0) + 1;
+      total++;
+    }
+  });
+
+  const segs = document.getElementById('gender-segments');
+  const tip  = document.getElementById('gender-tooltip');
+
+  if (total === 0) {
+    segs.innerHTML = `<div class="gr-seg" style="width:100%;background:#ddd8cc"></div>`;
+    tip.innerHTML  = `<span style="opacity:0.6">No gender data yet — add it via ✏️ Edit</span>`;
+    return;
+  }
+
+  segs.innerHTML = Object.entries(counts).map(([g, n]) =>
+    `<div class="gr-seg" style="width:${(n/total*100).toFixed(1)}%;background:${GENDER_COLORS[g]||'#9a9a8a'}"></div>`
+  ).join('');
+
+  tip.innerHTML = Object.entries(counts).map(([g, n]) =>
+    `<div class="gr-tt-item">
+      <div class="gr-tt-dot" style="background:${GENDER_COLORS[g]||'#9a9a8a'}"></div>
+      ${GENDER_LABELS[g]||g}: <strong>${n}</strong> (${Math.round(n/total*100)}%)
+    </div>`
+  ).join('');
+}
+
+// ── Tabs ─────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if (name==='calendar')  renderCalendar();
+  if (name==='reminders') renderReminders();
+  if (name==='forest')    renderForest();
+}
+
+// ── Forest ─────────────────────────────────────────────
+function renderForest() {
+  const container = document.getElementById('forest-trees');
+  const legend    = document.getElementById('forest-legend');
+  if (!container) return;
+
+  // Tree shape generators by category
+  function treeSVG(p, size) {
+    const h   = health(p);
+    const cat = CATS[p.category];
+    const s   = statusOf(p);
+
+    // Color palette per category
+    const palettes = {
+      'close-friends': { trunk:'#6b4226', dark:'#2d6e3e', mid:'#3a8c50', light:'#52b068', accent:'#7acc88' },
+      'friends':       { trunk:'#7a5530', dark:'#4a7a3a', mid:'#5a9448', light:'#72b05a', accent:'#96cc78' },
+      'family':        { trunk:'#5a3a20', dark:'#2a5a70', mid:'#3a78a0', light:'#5498c0', accent:'#80b8d8' },
+      'mentors':       { trunk:'#6a4a28', dark:'#7a6028', mid:'#9a8038', light:'#c0a848', accent:'#e0cc78' },
+      'network':       { trunk:'#5a4a38', dark:'#4a6a5a', mid:'#5a8878', light:'#7aaa98', accent:'#a0ccb8' },
+    };
+    const pal = palettes[p.category] || palettes['friends'];
+
+    // Sick/dying trees use brown/grey tones
+    const leafDark  = s==='urgent' ? '#7a6040' : s==='ok' ? pal.dark  : pal.dark;
+    const leafMid   = s==='urgent' ? '#9a7850' : s==='ok' ? pal.mid   : pal.mid;
+    const leafLight = s==='urgent' ? '#b89060' : s==='ok' ? pal.light : pal.light;
+    const leafTop   = s==='urgent' ? '#d4aa78' : s==='ok' ? pal.accent: pal.accent;
+
+    const w  = size;
+    const cx = w / 2;
+
+    // Different tree shapes per category
+    const shape = p.category;
+
+    if (shape === 'family') {
+      // Round oak-like tree
+      const th = Math.round(size * 0.38); // trunk height
+      const tw = Math.round(size * 0.11);
+      const cr = Math.round(size * 0.38); // canopy radius
+      const cy = Math.round(size * 0.42);
+      return `<svg width="${w}" height="${size}" viewBox="0 0 ${w} ${size}" xmlns="http://www.w3.org/2000/svg">
+        <rect x="${cx-tw/2}" y="${size-th}" width="${tw}" height="${th}" rx="3" fill="${pal.trunk}"/>
+        <ellipse cx="${cx}" cy="${cy}" rx="${cr}" ry="${cr*0.85}" fill="${leafDark}"/>
+        <ellipse cx="${cx-cr*0.25}" cy="${cy-cr*0.18}" rx="${cr*0.7}" ry="${cr*0.62}" fill="${leafMid}"/>
+        <ellipse cx="${cx+cr*0.2}" cy="${cy-cr*0.28}" rx="${cr*0.5}" ry="${cr*0.45}" fill="${leafLight}"/>
+        <ellipse cx="${cx-cr*0.1}" cy="${cy-cr*0.5}" rx="${cr*0.35}" ry="${cr*0.3}" fill="${leafTop}"/>
+        ${s==='great'?`<circle cx="${cx+cr*0.5}" cy="${cy-cr*0.6}" r="3" fill="#ffee88" opacity="0.8"/>`:``}
+      </svg>`;
+    }
+
+    if (shape === 'close-friends') {
+      // Tall lush tree with layered canopy tiers
+      const th = Math.round(size * 0.32);
+      const tw = Math.round(size * 0.10);
+      const pw = Math.round(size * 0.82);
+      const ph = Math.round(size * 0.3);
+      return `<svg width="${w}" height="${size}" viewBox="0 0 ${w} ${size}" xmlns="http://www.w3.org/2000/svg">
+        <rect x="${cx-tw/2}" y="${size-th}" width="${tw}" height="${th}" rx="3" fill="${pal.trunk}"/>
+        <polygon points="${cx},${size*0.04} ${cx-pw*0.42},${size*0.65} ${cx+pw*0.42},${size*0.65}" fill="${leafDark}"/>
+        <polygon points="${cx},${size*0.14} ${cx-pw*0.38},${size*0.58} ${cx+pw*0.38},${size*0.58}" fill="${leafMid}"/>
+        <polygon points="${cx},${size*0.06} ${cx-pw*0.32},${size*0.44} ${cx+pw*0.32},${size*0.44}" fill="${leafLight}"/>
+        <polygon points="${cx},${size*0.06} ${cx-pw*0.22},${size*0.34} ${cx+pw*0.22},${size*0.34}" fill="${leafTop}"/>
+        ${s==='great'?`<circle cx="${cx}" cy="${size*0.04}" r="4" fill="#ffe060" opacity="0.9"/>`:``}
+      </svg>`;
+    }
+
+    if (shape === 'mentors') {
+      // Ginkgo / ancient-looking wide spread tree
+      const th = Math.round(size * 0.4);
+      const tw = Math.round(size * 0.10);
+      const bw = Math.round(size * 0.9);
+      return `<svg width="${w}" height="${size}" viewBox="0 0 ${w} ${size}" xmlns="http://www.w3.org/2000/svg">
+        <rect x="${cx-tw/2}" y="${size-th}" width="${tw}" height="${th}" rx="3" fill="${pal.trunk}"/>
+        <ellipse cx="${cx}" cy="${size*0.38}" rx="${bw*0.44}" ry="${size*0.28}" fill="${leafDark}"/>
+        <ellipse cx="${cx-bw*0.28}" cy="${size*0.45}" rx="${bw*0.25}" ry="${size*0.2}" fill="${leafDark}"/>
+        <ellipse cx="${cx+bw*0.28}" cy="${size*0.45}" rx="${bw*0.25}" ry="${size*0.2}" fill="${leafDark}"/>
+        <ellipse cx="${cx}" cy="${size*0.28}" rx="${bw*0.32}" ry="${size*0.2}" fill="${leafMid}"/>
+        <ellipse cx="${cx-bw*0.18}" cy="${size*0.22}" rx="${bw*0.2}" ry="${size*0.15}" fill="${leafLight}"/>
+        <ellipse cx="${cx+bw*0.18}" cy="${size*0.22}" rx="${bw*0.2}" ry="${size*0.15}" fill="${leafLight}"/>
+        <ellipse cx="${cx}" cy="${size*0.16}" rx="${bw*0.16}" ry="${size*0.12}" fill="${leafTop}"/>
+      </svg>`;
+    }
+
+    if (shape === 'network') {
+      // Birch-like slim elegant tree
+      const th = Math.round(size * 0.55);
+      const tw = Math.round(size * 0.08);
+      const cr = Math.round(size * 0.28);
+      const cy = Math.round(size * 0.33);
+      return `<svg width="${w}" height="${size}" viewBox="0 0 ${w} ${size}" xmlns="http://www.w3.org/2000/svg">
+        <rect x="${cx-tw/2}" y="${size-th}" width="${tw}" height="${th}" rx="3" fill="${pal.trunk}"/>
+        <rect x="${cx-tw/4}" y="${size-th*1.05}" width="${tw*0.5}" height="${th*0.3}" rx="2" fill="${pal.trunk}" opacity="0.6"/>
+        <ellipse cx="${cx}" cy="${cy}" rx="${cr}" ry="${cr*0.9}" fill="${leafDark}"/>
+        <ellipse cx="${cx-cr*0.3}" cy="${cy-cr*0.2}" rx="${cr*0.65}" ry="${cr*0.6}" fill="${leafMid}"/>
+        <ellipse cx="${cx+cr*0.2}" cy="${cy-cr*0.3}" rx="${cr*0.5}" ry="${cr*0.45}" fill="${leafLight}"/>
+        <ellipse cx="${cx}" cy="${cy-cr*0.55}" rx="${cr*0.3}" ry="${cr*0.28}" fill="${leafTop}"/>
+      </svg>`;
+    }
+
+    // friends — default: full bushy round tree
+    const th = Math.round(size * 0.35);
+    const tw = Math.round(size * 0.10);
+    const cr = Math.round(size * 0.35);
+    const cy = Math.round(size * 0.42);
+    return `<svg width="${w}" height="${size}" viewBox="0 0 ${w} ${size}" xmlns="http://www.w3.org/2000/svg">
+      <rect x="${cx-tw/2}" y="${size-th}" width="${tw}" height="${th}" rx="3" fill="${pal.trunk}"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="${cr*0.95}" ry="${cr*0.82}" fill="${leafDark}"/>
+      <ellipse cx="${cx-cr*0.3}" cy="${cy-cr*0.15}" rx="${cr*0.68}" ry="${cr*0.6}" fill="${leafMid}"/>
+      <ellipse cx="${cx+cr*0.18}" cy="${cy-cr*0.25}" rx="${cr*0.55}" ry="${cr*0.48}" fill="${leafLight}"/>
+      <ellipse cx="${cx-cr*0.08}" cy="${cy-cr*0.52}" rx="${cr*0.38}" ry="${cr*0.32}" fill="${leafTop}"/>
+      ${s==='great'?`<circle cx="${cx+cr*0.45}" cy="${cy-cr*0.55}" r="3.5" fill="#ffdd66" opacity="0.85"/>`:``}
+    </svg>`;
+  }
+
+  // Build trees — sort by category for depth layers (back to front), then within each category by health desc
+  const catOrder = ['network','mentors','friends','family','close-friends'];
+  const sorted = [...people].sort((a,b) => {
+    const ci = catOrder.indexOf(a.category) - catOrder.indexOf(b.category);
+    if (ci !== 0) return ci;
+    return health(b) - health(a);
+  });
+
+  // Scale tree sizes — base on health (60%–100% of target) and category importance
+  const sizeMap = {
+    'close-friends': 130,
+    'family': 115,
+    'friends': 100,
+    'mentors': 120,
+    'network': 85,
+  };
+
+  // Stagger vertical positions slightly for depth
+  const layerY = {
+    'close-friends': 0,
+    'family': 8,
+    'friends': 14,
+    'mentors': 5,
+    'network': 20,
+  };
+
+  const treeEls = sorted.map((p, i) => {
+    const h    = health(p);
+    const base = sizeMap[p.category] || 100;
+    const size = Math.round(base * (0.55 + h/100 * 0.55));
+    const yOff = layerY[p.category] || 0;
+    const opacity = statusOf(p) === 'urgent' ? 0.75 : 1;
+
+    // Subtle sway animation with varied timing
+    const swayDur  = (3.5 + (i % 5) * 0.7).toFixed(1);
+    const swayDel  = (i * 0.3 % 2).toFixed(1);
+
+    return `<div class="ftree-wrap" onclick="openProfile('${p.id}')"
+        style="margin-bottom:${yOff}px; opacity:${opacity};
+               animation: treeSway ${swayDur}s ease-in-out ${swayDel}s infinite alternate;">
+      <div class="ftree-label">${p.emoji} ${p.name}</div>
+      ${treeSVG(p, size)}
+      <div class="ftree-shadow" style="width:${Math.round(size*0.55)}px; opacity:${0.1 + h/100*0.15}"></div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = treeEls ||
+    `<div style="color:rgba(255,255,255,0.7);font-size:0.8rem;font-weight:700;padding:2rem">
+      Add people to grow your forest! 🌱
+    </div>`;
+
+  // Legend
+  legend.innerHTML = Object.entries(CATS).map(([key, c]) => {
+    const count = people.filter(p=>p.category===key).length;
+    if (!count) return '';
+    return `<div class="fleg-item">
+      <div class="fleg-dot" style="background:${c.color}"></div>
+      ${c.label} · ${count}
+    </div>`;
+  }).join('') + `
+    <div class="fleg-item"><div class="fleg-dot" style="background:#5a8a48"></div>Healthy = taller & fuller</div>
+    <div class="fleg-item"><div class="fleg-dot" style="background:#b89060"></div>Overdue = brown & smaller</div>
+  `;
+}
+
+// ── Toast ─────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = `
+    position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%);
+    background:#2c2416ee; color:#f5f0e8; border-radius:99px;
+    padding:0.5rem 1.2rem; font-size:0.72rem; font-weight:800;
+    font-family:'Nunito',sans-serif; z-index:9999;
+    box-shadow:0 4px 16px rgba(0,0,0,0.2);
+    animation: toastIn 0.2s ease, toastOut 0.3s ease 1.4s forwards;
+  `;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 1800);
+}
+
+// ── Modals ────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o=>{
+  // Only close when clicking the dark backdrop itself, not anything inside the modal
+  o.addEventListener('mousedown', e=>{ if(e.target===o) o.classList.remove('open'); });
+});
+document.querySelectorAll('.modal').forEach(m=>{
+  // Prevent any clicks inside modal from bubbling to overlay
+  m.addEventListener('click', e=>e.stopPropagation());
+});
+
+// ── Seed Demo ─────────────────────────────────────────
+function seedDemo() {
+  if (people.length > 0) return;
+  const ago = n => { const d=new Date(); d.setDate(d.getDate()-n); return d.toISOString().split('T')[0]; };
+  people = [
+    { id:'1', name:'Mom',       emoji:'🌺', category:'family',       how:'Sunday calls',    notes:'Loves hearing your updates. Ask about the garden!',     birthday:'1962-03-15', gender:'woman',    orgs:['Family'],               involvements:['Sunday dinners','holiday planning'],                           lastContact:ago(5),  added:ago(100), log:[{id:'a',date:ago(5),how:'phone call',note:'Talked about the holidays and summer plans'}],       remEmail:false,remSMS:false },
+    { id:'2', name:'Alex',      emoji:'🦊', category:'close-friends', how:'texts + coffee',  notes:'Always down to vent. The café inside joke still slaps.', birthday:'2001-07-22', gender:'woman',    orgs:['UCSB','Phi Beta Kappa'], involvements:['journalism club','coffee meetups'],                            lastContact:ago(1),  added:ago(90),  log:[{id:'b',date:ago(1),how:'coffee',note:'Laughed so hard about the parking meter thing'}],     remEmail:false,remSMS:false },
+    { id:'3', name:'Jordan',    emoji:'🎸', category:'close-friends', how:'gaming + calls',  notes:'Talk music & career. Very thoughtful advice giver.',     birthday:'2000-11-04', gender:'man',      orgs:['UCSB'],                  involvements:['music collective','gaming nights','career mentee'],            lastContact:ago(5),  added:ago(80),  log:[],  remEmail:false,remSMS:false },
+    { id:'4', name:'Sam',       emoji:'🌊', category:'friends',       how:'group hangouts',  notes:'Great energy at parties. Usually at mutual events.',     birthday:'2002-05-30', gender:'nonbinary',orgs:['UCLA'],                  involvements:['surf club','environmental activism'],                          lastContact:ago(14), added:ago(70),  log:[],  remEmail:false,remSMS:false },
+    { id:'5', name:'Dr. Rivera',emoji:'🌱', category:'mentors',       how:'scheduled coffee',notes:'Ask about industry shifts. Send progress updates first.',birthday:'1975-09-08', gender:'woman',    orgs:['UC Berkeley Law'],       involvements:['environmental law','pro bono work','faculty senate'],          lastContact:ago(95), added:ago(365), log:[],  remEmail:false,remSMS:false },
+    { id:'6', name:'Taylor',    emoji:'🌿', category:'network',       how:'LinkedIn, email', notes:'Met at a conference. Works in product @ startup.',       birthday:'1998-02-14', gender:'man',      orgs:['YC Alumni','Stanford'],  involvements:['product design','startup ecosystem','tech ethics research'],   lastContact:ago(52), added:ago(200), log:[],  remEmail:false,remSMS:false },
+  ];
+  save();
+}
+
+// ── Init ─────────────────────────────────────────────
+buildEP('ep-add','f-emoji', EMOJIS[0]);
+seedDemo();
+renderGarden();
+renderGenderBar();
+</script>
+</body>
+</html>
